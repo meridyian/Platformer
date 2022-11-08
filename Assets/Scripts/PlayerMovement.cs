@@ -15,8 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
 
     //created a variable with datatype that you created, finite set of values for states
-    private enum MovementState {idle, running, jumping, falling}
-    private MovementState state = MovementState.idle;
+    private enum MovementState {idle, running, jumping, falling};
+
 
     // Start is called before the first frame update
     private void Start()
@@ -48,24 +48,42 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateAnimationState()
     {
+
+        MovementState state;
+
         //enable/disable running animation
         // else if- else
-
         if (dirX > 0f)
         {
-            anim.SetBool("running", true);
+            state = MovementState.running;
             sprite.flipX = false;
         }
         else if (dirX < 0f)
         {
             //sprite renderer has an ability to change the direction
-            anim.SetBool("running", true);
+            state = MovementState.running;
             sprite.flipX = true;
 
         }
         else
         {
-            anim.SetBool("running", false);
+            state = MovementState.idle;
         }
+
+        // since you dont want to see idle or running animation whiile you are in the air
+        // seconda part to exacute
+        // check if you are jumping
+        if (rb.velocity.y > .1f)
+        {
+            state = MovementState.jumping;
+        }
+        else if (rb.velocity.y < .1f)
+        {
+            state = MovementState.falling;
+        }
+
+        anim.SetInteger("state", (int)state);
+
+
     }
 }
