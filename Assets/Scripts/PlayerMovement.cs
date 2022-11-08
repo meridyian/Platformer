@@ -5,8 +5,11 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private BoxCollider2D col;
     private Animator anim;
     private SpriteRenderer sprite;
+
+    [SerializeField] private LayerMask jumpableGround;
 
     private float dirX = 0f;
     // to make it somehow public 
@@ -25,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        col = GetComponent<BoxCollider2D>();
         
     }
 
@@ -36,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
         //jump during the game but dont when you pressed down with input manager
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             // to access, only jump
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
@@ -84,6 +88,13 @@ public class PlayerMovement : MonoBehaviour
 
         anim.SetInteger("state", (int)state);
 
+    }
 
+    private bool IsGrounded()
+    {
+        //creates another boxcollider around the collider which has exactly the same location,size
+        //vector2 moves box down a bit to use grounded?
+        //check what are you colliding with
+        return Physics2D.BoxCast(col.bounds.center, col.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
     }
 }
