@@ -14,6 +14,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 14f;
 
 
+    //created a variable with datatype that you created, finite set of values for states
+    private enum MovementState {idle, running, jumping, falling}
+    private MovementState state = MovementState.idle;
+
     // Start is called before the first frame update
     private void Start()
     {
