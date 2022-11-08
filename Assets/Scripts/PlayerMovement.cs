@@ -75,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // since you dont want to see idle or running animation whiile you are in the air
-        // seconda part to exacute
+        // second part to execute
         // check if you are jumping
         if (rb.velocity.y > .1f)
         {
