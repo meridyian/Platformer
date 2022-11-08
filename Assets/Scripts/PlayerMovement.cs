@@ -21,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     private enum MovementState {idle, running, jumping, falling};
 
 
+    public bool isInAir;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -44,7 +46,13 @@ public class PlayerMovement : MonoBehaviour
         {
             // to access, only jump
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            anim.SetTrigger("jump");
+            //isInAir = true;
+            
         }
+
+        isInAir = !IsGrounded();
+
 
         UpdateAnimationState();
         
@@ -77,19 +85,14 @@ public class PlayerMovement : MonoBehaviour
         // since you dont want to see idle or running animation whiile you are in the air
         // second part to execute
         // check if you are jumping
-        if (rb.velocity.y > .1f)
-        {
-            state = MovementState.jumping;
-        }
-        else if (rb.velocity.y < .1f)
+
+
+        if (rb.velocity.y < .1f && isInAir)
         {
             state = MovementState.falling;
         }
-        else
-        {
-            Debug.Log(rb.velocity.y);
-        }
-        
+
+
         anim.SetInteger("state", (int)state);
 
     }
@@ -100,5 +103,13 @@ public class PlayerMovement : MonoBehaviour
         //vector2 moves box down a bit to use grounded?
         //check what are you colliding with
         return Physics2D.BoxCast(col.bounds.center, col.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (col == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(col.bounds.center, col.bounds.size);
     }
 }
