@@ -6,12 +6,20 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Animator anim;
-    
+    private SpriteRenderer sprite;
+
+    private float dirX = 0f;
+    // to make it somehow public 
+    [SerializeField] private float moveSpeed = 7f;
+    [SerializeField] private float jumpForce = 14f;
+
+
     // Start is called before the first frame update
     private void Start()
     {
         //execute your rb at start of the game
         rb = GetComponent<Rigidbody2D>();
+        sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         
     }
@@ -20,33 +28,40 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // directional variable range(-1,1)
-        float dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * 7f, rb.velocity.y);
-
-        
+        dirX = Input.GetAxisRaw("Horizontal");
+        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
         //jump during the game but dont when you pressed down with input manager
         if (Input.GetButtonDown("Jump"))
         {
             // to access, only jump
-            rb.velocity = new Vector2(rb.velocity.x, 14f);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
+        UpdateAnimationState();
+        
+    }
+
+    private void UpdateAnimationState()
+    {
         //enable/disable running animation
         // else if- else
 
-        if(dirX > 0f)
+        if (dirX > 0f)
         {
             anim.SetBool("running", true);
+            sprite.flipX = false;
         }
-        else if (dirX <0f)
+        else if (dirX < 0f)
         {
+            //sprite renderer has an ability to change the direction
             anim.SetBool("running", true);
+            sprite.flipX = true;
+
         }
         else
         {
             anim.SetBool("running", false);
         }
-
     }
 }
