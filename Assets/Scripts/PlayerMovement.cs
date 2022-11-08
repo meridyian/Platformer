@@ -85,7 +85,11 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.falling;
         }
-
+        else
+        {
+            Debug.Log(rb.velocity.y);
+        }
+        
         anim.SetInteger("state", (int)state);
 
     }
