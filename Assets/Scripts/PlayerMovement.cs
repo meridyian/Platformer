@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer sprite;
 
 
+
     [SerializeField] private LayerMask jumpableGround;
 
     private float dirX = 0f;
@@ -25,6 +26,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private AudioSource jumpSoundEffect;
 
     public bool isInAir;
+    public PlayerLife move;
+ 
+    
 
     // Start is called before the first frame update
     private void Start()
@@ -34,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         col = GetComponent<BoxCollider2D>();
+        
         
     }
 
@@ -45,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
         //jump during the game but dont when you pressed down with input manager
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (Input.GetButtonDown("Jump") && IsGrounded() && move.isDead == false)
         {
             jumpSoundEffect.Play();
             // to access, only jump
@@ -53,16 +58,18 @@ public class PlayerMovement : MonoBehaviour
             anim.SetTrigger("jump");
             //isInAir = true;
             
+            
         }
 
         isInAir = !IsGrounded();
-
+        
+        
 
         UpdateAnimationState();
         
     }
 
-    private void UpdateAnimationState()
+    public void UpdateAnimationState()
     {
 
         MovementState state;
@@ -81,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
             sprite.flipX = true;
 
         }
-        else
+        else 
         {
             state = MovementState.idle;
         }
@@ -96,10 +103,12 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.falling;
         }
 
-
         anim.SetInteger("state", (int)state);
 
     }
+
+
+
 
     private bool IsGrounded()
     {

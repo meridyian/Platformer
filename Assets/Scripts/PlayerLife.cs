@@ -8,6 +8,10 @@ public class PlayerLife : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
 
+    public bool isDead = false;
+
+
+
     [SerializeField] private AudioSource deathSoundEffect;
 
     // Start is called before the first frame update
@@ -23,15 +27,20 @@ public class PlayerLife : MonoBehaviour
         if (collision.gameObject.CompareTag("Trap"))
         {
             Die();
+
         }
     }
+
 
     private void Die()
     {
         deathSoundEffect.Play();
         rb.bodyType = RigidbodyType2D.Static;
         anim.SetTrigger("death");
+        isDead = true;
+
     }
+
 
     private void RestartLevel()
     {
@@ -39,3 +48,4 @@ public class PlayerLife : MonoBehaviour
     }
 
 }
+
