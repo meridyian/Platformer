@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     private Animator anim;
     private SpriteRenderer sprite;
 
+
     [SerializeField] private LayerMask jumpableGround;
 
     private float dirX = 0f;
@@ -20,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     //created a variable with datatype that you created, finite set of values for states
     private enum MovementState {idle, running, jumping, falling};
 
+    //cannot use getcomponent since there will be multiple audio sources
+    [SerializeField] private AudioSource jumpSoundEffect;
 
     public bool isInAir;
 
@@ -44,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
         //jump during the game but dont when you pressed down with input manager
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            jumpSoundEffect.Play();
             // to access, only jump
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             anim.SetTrigger("jump");
