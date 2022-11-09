@@ -1,30 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Finish : MonoBehaviour
 {
-    //since it will be the only audiosource on finishobject no need to use serialize
-
     private AudioSource finishSound;
+    private bool levelCompleted = false;
 
     private void Start()
     {
+        Debug.Log("sdsds");
         finishSound = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.name == "Player")
+        Debug.Log("xssss");
+        if (collision.gameObject.name == "Player")
         {
             finishSound.Play();
-            CompleteLevel();
+            levelCompleted = true;
+            Debug.Log("x");
+            Invoke("CompleteLevel", 2f);
+
         }
     }
 
     private void CompleteLevel()
     {
-
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
 }
